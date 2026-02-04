@@ -2,6 +2,8 @@
     "resourceSpecId": "22222222-2222-4222-8222-222222222222",
     "stableId": "main-documentdb",
     "displayName": "Main DocumentDB Cluster",
+    "category": "database",
+    "iconUrl": "https://cdn.sigmoid.us/icons/aws/full-size/svg/database/documentdb.svg",
     "resourceType": "database.documentdb",
     "vpcDependency": "required",
     "status": "draft",
