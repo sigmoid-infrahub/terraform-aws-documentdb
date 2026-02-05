@@ -7,57 +7,11 @@
     "resourceType": "database.documentdb",
     "vpcDependency": "required",
     "status": "draft",
-    "inputs": {
-        "cluster_identifier": "sigmoid-docdb-cluster",
-        "engine": "docdb",
-        "engine_version": "5.0.0",
-        "master_username": { "ref": "secrets.docdb_username", "required": true, "sensitive": true },
-        "master_password": { "ref": "secrets.docdb_password", "required": true, "sensitive": true },
-        "db_subnet_group_name": { "ref": "db-subnet-group.name", "required": true },
-        "vpc_security_group_ids": [
-            { "ref": "documentdb-sg.id", "required": true }
-        ],
-        "instance_class": "db.r6g.large",
-        "instance_count": 3,
-        "port": 27017,
-        "backup_retention_period": 14,
-        "preferred_backup_window": "03:00-05:00",
-        "preferred_maintenance_window": "sun:05:00-sun:07:00",
-        "storage_encrypted": true,
-        "kms_key_id": { "ref": "kms-key.arn" },
-        "deletion_protection": true,
-        "apply_immediately": false,
-        "skip_final_snapshot": false,
-        "enabled_cloudwatch_logs_exports": ["audit", "profiler"]
-    },
-    "inputSpecs": [
-        { "name": "cluster_identifier", "type": "string", "required": true },
-        { "name": "engine", "type": "string", "required": false, "default": "docdb" },
-        { "name": "engine_version", "type": "string", "required": false },
-        { "name": "master_username", "type": "string", "required": true },
-        { "name": "master_password", "type": "string", "required": true },
-        { "name": "db_subnet_group_name", "type": "string", "required": true },
-        { "name": "vpc_security_group_ids", "type": "array", "required": false },
-        { "name": "instance_class", "type": "string", "required": true },
-        { "name": "instance_count", "type": "number", "required": false, "default": 1 },
-        { "name": "port", "type": "number", "required": false, "default": 27017 },
-        { "name": "backup_retention_period", "type": "number", "required": false, "default": 7 },
-        { "name": "preferred_backup_window", "type": "string", "required": false },
-        { "name": "preferred_maintenance_window", "type": "string", "required": false },
-        { "name": "storage_encrypted", "type": "boolean", "required": false, "default": true },
-        { "name": "kms_key_id", "type": "string", "required": false },
-        { "name": "deletion_protection", "type": "boolean", "required": false, "default": false },
-        { "name": "apply_immediately", "type": "boolean", "required": false, "default": false },
-        { "name": "skip_final_snapshot", "type": "boolean", "required": false, "default": false },
-        { "name": "enabled_cloudwatch_logs_exports", "type": "array", "required": false }
-    ],
-    "scope": {
-        "vpcId": "main-vpc"
-    },
     "position": { "x": 500, "y": 300 },
     "terraform": {
         "module": {
-            "source": "../../terraform-modules/terraform-aws-documentdb"
+            "source": "github.com/sigmoid-hq/terraform-aws-documentdb",
+            "ref": "main"
         }
     }
 }
