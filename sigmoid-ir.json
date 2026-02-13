@@ -13,5 +13,18 @@
             "source": "github.com/sigmoid-hq/terraform-aws-documentdb",
             "ref": "main"
         }
+    },
+    "pricing": {
+        "awsPricingLookup": {
+            "serviceCode": "AmazonDocDB",
+            "unit": "hourly",
+            "quantityProperties": ["instance_count", "count"],
+            "quantityDefault": 1,
+            "filters": [
+                { "field": "location", "value": "${location}" },
+                { "field": "instanceType", "propertyKeys": ["instance_class", "instance_type"] },
+                { "field": "databaseEngine", "defaultValue": "Amazon DocumentDB", "required": false }
+            ]
+        }
     }
 }
