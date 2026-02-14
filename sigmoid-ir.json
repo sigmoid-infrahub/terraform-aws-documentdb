@@ -25,6 +25,25 @@
                 { "field": "instanceType", "propertyKeys": ["instance_class", "instance_type"] },
                 { "field": "databaseEngine", "defaultValue": "Amazon DocumentDB", "required": false }
             ]
+        },
+        "usageProfiles": {
+            "default": "medium",
+            "low": {
+                "instance_count": 1,
+                "count": 1
+            },
+            "medium": {
+                "instance_count": 2,
+                "count": 2
+            },
+            "high": {
+                "instance_count": 4,
+                "count": 4
+            },
+            "xhigh": {
+                "instance_count": 8,
+                "count": 8
+            }
         }
     }
 }
