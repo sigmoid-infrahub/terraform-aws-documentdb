@@ -45,5 +45,11 @@
                 "count": 8
             }
         }
+    },
+    "easy": {
+        "alias": "Database",
+        "group": "data-database",
+        "priority": 50,
+        "allowedProperties": ["instance_class", "count", "instance_count"]
     }
 }
