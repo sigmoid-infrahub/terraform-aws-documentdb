@@ -30,12 +30,43 @@ variable "master_password" {
 variable "db_subnet_group_name" {
   type        = string
   description = "Subnet group name"
+  default     = null
+}
+
+variable "create_db_subnet_group" {
+  type        = bool
+  description = "Whether to create a DocumentDB subnet group"
+  default     = true
+}
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnet IDs for subnet group creation"
+  default     = []
 }
 
 variable "vpc_security_group_ids" {
   type        = list(string)
   description = "Security group IDs"
   default     = []
+}
+
+variable "create_security_group" {
+  type        = bool
+  description = "Whether to create a security group for DocumentDB"
+  default     = false
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID for security group creation"
+  default     = null
+}
+
+variable "security_group_ingress_cidr_blocks" {
+  type        = list(string)
+  description = "Ingress CIDR blocks allowed to access DocumentDB port"
+  default     = ["10.0.0.0/8"]
 }
 
 variable "instance_class" {

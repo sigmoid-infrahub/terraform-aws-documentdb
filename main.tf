@@ -1,3 +1,36 @@
+resource "aws_docdb_subnet_group" "this" {
+  count = var.create_db_subnet_group ? 1 : 0
+
+  name       = "${var.cluster_identifier}-subnet-group"
+  subnet_ids = var.subnet_ids
+
+  tags = local.resolved_tags
+}
+
+resource "aws_security_group" "this" {
+  count = var.create_security_group ? 1 : 0
+
+  name        = "${var.cluster_identifier}-docdb-sg"
+  description = "DocumentDB security group"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = var.security_group_ingress_cidr_blocks
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = local.resolved_tags
+}
+
 resource "aws_docdb_cluster" "this" {
   cluster_identifier = var.cluster_identifier
   engine             = var.engine
@@ -6,8 +39,8 @@ resource "aws_docdb_cluster" "this" {
   master_username = var.master_username
   master_password = var.master_password
 
-  db_subnet_group_name   = var.db_subnet_group_name
-  vpc_security_group_ids = var.vpc_security_group_ids
+  db_subnet_group_name   = local.db_subnet_group_name
+  vpc_security_group_ids = local.security_group_ids
 
   port = var.port
 
@@ -34,4 +67,3 @@ resource "aws_docdb_cluster_instance" "this" {
   cluster_identifier = aws_docdb_cluster.this.id
   instance_class     = var.instance_class
 }
-
