@@ -1,0 +1,55 @@
+{
+    "resourceSpecId": "22222222-2222-4222-8222-222222222222",
+    "stableId": "main-documentdb",
+    "displayName": "DocumentDB Cluster",
+    "category": "database",
+    "iconUrl": "https://cdn.sigmoid.us/icons/aws/full-size/svg/database/documentdb.svg",
+    "resourceType": "database.documentdb",
+    "vpcDependency": "required",
+    "status": "draft",
+    "position": { "x": 500, "y": 300 },
+    "terraform": {
+        "module": {
+            "source": "github.com/sigmoid-hq/terraform-aws-documentdb",
+            "ref": "main"
+        }
+    },
+    "pricing": {
+        "awsPricingLookup": {
+            "serviceCode": "AmazonDocDB",
+            "unit": "hourly",
+            "quantityProperties": ["instance_count", "count"],
+            "quantityDefault": 1,
+            "filters": [
+                { "field": "location", "value": "${location}" },
+                { "field": "instanceType", "propertyKeys": ["instance_class", "instance_type"] },
+                { "field": "databaseEngine", "defaultValue": "Amazon DocumentDB", "required": false }
+            ]
+        },
+        "usageProfiles": {
+            "default": "medium",
+            "low": {
+                "instance_count": 1,
+                "count": 1
+            },
+            "medium": {
+                "instance_count": 2,
+                "count": 2
+            },
+            "high": {
+                "instance_count": 4,
+                "count": 4
+            },
+            "xhigh": {
+                "instance_count": 8,
+                "count": 8
+            }
+        }
+    },
+    "easy": {
+        "alias": "Database",
+        "group": "data-database",
+        "priority": 50,
+        "allowedProperties": ["instance_class", "count", "instance_count"]
+    }
+}
