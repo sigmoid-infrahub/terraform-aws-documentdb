@@ -31,6 +31,16 @@ resource "aws_security_group" "this" {
   tags = local.resolved_tags
 }
 
+resource "aws_cloudwatch_log_group" "this" {
+  for_each = toset(var.enabled_cloudwatch_logs_exports)
+
+  name              = "/aws/docdb/${var.cluster_identifier}/${each.value}"
+  retention_in_days = var.log_retention_in_days
+  kms_key_id        = var.log_kms_key_id != "" ? var.log_kms_key_id : null
+
+  tags = local.resolved_tags
+}
+
 resource "aws_docdb_cluster" "this" {
   cluster_identifier = var.cluster_identifier
   engine             = var.engine
@@ -49,7 +59,7 @@ resource "aws_docdb_cluster" "this" {
   preferred_maintenance_window = var.preferred_maintenance_window
 
   storage_encrypted = var.storage_encrypted
-  kms_key_id        = var.kms_key_id
+  kms_key_id        = var.kms_key_id != "" ? var.kms_key_id : null
 
   deletion_protection = var.deletion_protection
   apply_immediately   = var.apply_immediately
@@ -58,12 +68,15 @@ resource "aws_docdb_cluster" "this" {
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
 
   tags = local.resolved_tags
+
+  depends_on = [aws_cloudwatch_log_group.this]
 }
 
 resource "aws_docdb_cluster_instance" "this" {
   count = var.instance_count
 
-  identifier         = "${var.cluster_identifier}-${count.index}"
-  cluster_identifier = aws_docdb_cluster.this.id
-  instance_class     = var.instance_class
+  identifier                 = "${var.cluster_identifier}-${count.index}"
+  cluster_identifier         = aws_docdb_cluster.this.id
+  instance_class             = var.instance_class
+  auto_minor_version_upgrade = var.auto_minor_version_upgrade
 }

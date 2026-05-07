@@ -113,13 +113,13 @@ variable "storage_encrypted" {
 variable "kms_key_id" {
   type        = string
   description = "KMS key ID"
-  default     = null
+  default     = ""
 }
 
 variable "deletion_protection" {
   type        = bool
   description = "Deletion protection"
-  default     = false
+  default     = true
 }
 
 variable "apply_immediately" {
@@ -137,7 +137,31 @@ variable "skip_final_snapshot" {
 variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   description = "CloudWatch logs exports"
-  default     = []
+  default     = ["audit", "profiler"]
+}
+
+variable "log_retention_in_days" {
+  type        = number
+  description = "CloudWatch log group retention in days"
+  default     = 30
+}
+
+variable "log_kms_key_id" {
+  type        = string
+  description = "KMS key ID for CloudWatch log group encryption. Empty string disables explicit log group KMS encryption"
+  default     = ""
+}
+
+variable "iam_database_authentication_enabled" {
+  type        = bool
+  description = "Enable IAM database authentication"
+  default     = false
+}
+
+variable "auto_minor_version_upgrade" {
+  type        = bool
+  description = "Enable automatic minor version upgrades for cluster instances"
+  default     = true
 }
 
 variable "tags" {
