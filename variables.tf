@@ -1,6 +1,16 @@
 variable "cluster_identifier" {
   type        = string
   description = "DocumentDB cluster identifier"
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]*[a-z0-9]$", var.cluster_identifier)) && length(var.cluster_identifier) <= 63
+    error_message = "Cluster identifier must start with a letter, contain only lowercase letters, numbers, and hyphens, not end with a hyphen, and be at most 63 characters."
+  }
+
+  validation {
+    condition     = !can(regex("--", var.cluster_identifier))
+    error_message = "Cluster identifier cannot contain two consecutive hyphens."
+  }
 }
 
 variable "engine" {
@@ -19,12 +29,32 @@ variable "master_username" {
   type        = string
   description = "Master username"
   sensitive   = true
+
+  validation {
+    condition     = can(regex("^[a-zA-Z][a-zA-Z0-9_]*$", var.master_username)) && length(var.master_username) >= 1 && length(var.master_username) <= 63
+    error_message = "Username must start with a letter, contain only letters, numbers, and underscores, and be 1-63 characters."
+  }
+
+  validation {
+    condition     = !contains(["admin", "rdsadmin"], lower(var.master_username))
+    error_message = "Cannot use reserved names: admin, rdsadmin."
+  }
 }
 
 variable "master_password" {
   type        = string
   description = "Master password"
   sensitive   = true
+
+  validation {
+    condition     = length(var.master_password) >= 8 && length(var.master_password) <= 100
+    error_message = "Password must be between 8 and 100 characters."
+  }
+
+  validation {
+    condition     = !can(regex("[/@\"\\s]", var.master_password))
+    error_message = "Password cannot contain /, @, quotes, or spaces."
+  }
 }
 
 variable "db_subnet_group_name" {
@@ -78,12 +108,22 @@ variable "instance_count" {
   type        = number
   description = "Instance count"
   default     = 1
+
+  validation {
+    condition     = var.instance_count >= 1 && var.instance_count <= 16
+    error_message = "Instance count must be between 1 and 16."
+  }
 }
 
 variable "port" {
   type        = number
   description = "Port"
   default     = 27017
+
+  validation {
+    condition     = var.port >= 1150 && var.port <= 65535
+    error_message = "Port must be between 1150 and 65535."
+  }
 }
 
 variable "backup_retention_period" {
